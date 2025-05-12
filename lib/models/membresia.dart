@@ -1,24 +1,39 @@
 class Membresia {
-  final int? id;
-  final int clienteId;
-  final DateTime fechaInicio;
-  final DateTime fechaFin;
-  final String tipo;
-  final double costo;
+  int? id;
+  int clienteId;
+  DateTime fechaInicio;
+  DateTime fechaFin;
+  String? tipo;
+  double? costo;
 
   Membresia({
     this.id,
     required this.clienteId,
     required this.fechaInicio,
     required this.fechaFin,
-    required this.tipo,
-    required this.costo,
+    this.tipo,
+    this.costo,
   });
 
   bool get estaActiva {
     final ahora = DateTime.now();
     return ahora.isAfter(fechaInicio) && ahora.isBefore(fechaFin);
   }
+
+  int? get getId => id;
+  int get getClienteId => clienteId;
+  DateTime get getFechaInicio => fechaInicio;
+  DateTime get getFechaFin => fechaFin;
+  String? get getTipo => tipo;
+  double? get getCosto => costo;
+  bool get isPersonalizado => tipo == 'Personalizado' ? true : false;
+
+  set setId(int? value) => id = value;
+  set setClienteId(int value) => clienteId = value;
+  set setFechaInicio(DateTime value) => fechaInicio = value;
+  set setFechaFin(DateTime value) => fechaFin = value;
+  set setTipo(String? value) => tipo = value;
+  set setCosto(double? value) => costo = value;
 
   Map<String, dynamic> toMap() {
     return {

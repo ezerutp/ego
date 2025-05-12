@@ -24,7 +24,8 @@ class DatabaseService {
         nombres TEXT,
         apellidos TEXT,
         dni TEXT,
-        celular TEXT
+        celular TEXT,
+        estado INTEGER DEFAULT 1
       )
     ''');
 

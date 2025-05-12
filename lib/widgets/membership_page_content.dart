@@ -1,18 +1,16 @@
-import 'package:ego/models/cliente_stats.dart';
+import 'package:ego/models/membresia_stats.dart';
 import 'package:ego/utils/utils.dart';
 import 'package:flutter/material.dart';
 import '../models/cliente.dart';
 import '../models/membresia.dart';
 import '../theme/color.dart';
 
-class HomePageContent {
+class MemberPageContent {
   static Widget buildHomePage(
-    BuildContext context,
-    List<Cliente> clientes,
-    ClienteStats stats,
-    Function onAddClientePressed,
-    Map<int, Membresia?> membresiasPorCliente,
-    Function(BuildContext context, int id, String nombre) onEliminarCliente,
+    List<Membresia> membresias,
+    MembresiaStats stats,
+    Function onAddMembershipPressed,
+    Map<int, Cliente?> clientePorMembresia,
   ) {
     return Padding(
       padding: const EdgeInsets.all(16),
@@ -23,15 +21,15 @@ class HomePageContent {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Totales: ${stats.totalActivosValue}',
+                'Totales: ${stats.totalMembresiasValue}',
                 style: TextStyle(color: Colors.white),
               ),
               Text(
-                'Activos: ${stats.conMembresiaValue}',
+                'Normales: ${stats.totalNormalesValue}',
                 style: TextStyle(color: Colors.white),
               ),
               Text(
-                'Vencidos: ${stats.sinMembresiaValue}',
+                'Personalizados: ${stats.totalPersonalizadosValue}',
                 style: TextStyle(color: Colors.white),
               ),
             ],
@@ -42,9 +40,9 @@ class HomePageContent {
               backgroundColor: AppColors.orange,
               padding: const EdgeInsets.symmetric(vertical: 16),
             ),
-            onPressed: () => onAddClientePressed(),
+            onPressed: () => onAddMembershipPressed(),
             child: const Text(
-              '+ Añadir cliente',
+              '+ Añadir membresía',
               style: TextStyle(fontSize: 16, color: AppColors.white),
             ),
           ),
@@ -52,7 +50,7 @@ class HomePageContent {
           TextField(
             style: const TextStyle(color: AppColors.white),
             decoration: InputDecoration(
-              hintText: 'Buscar miembro',
+              hintText: 'Buscar membresía',
               hintStyle: const TextStyle(
                 color: AppColors.gray,
                 fontStyle: FontStyle.italic,
@@ -70,37 +68,20 @@ class HomePageContent {
           Expanded(
             child: ListView(
               children:
-                  clientes.map((cliente) {
+                  membresias.map((membresia) {
+                    var cliente = clientePorMembresia[membresia.clienteId];
                     var nombreCompleto =
-                        '${cliente.nombres} ${cliente.apellidos}';
-                    var membresia = membresiasPorCliente[cliente.id];
-                    if (membresia != null) {
-                      return Utils.buildClienteTile(
-                        cliente.id,
-                        nombreCompleto,
-                        'Activo',
-                        context,
-                        onDelete:
-                            () => onEliminarCliente(
-                              context,
-                              cliente.id!,
-                              nombreCompleto,
-                            ),
-                      );
-                    } else {
-                      return Utils.buildClienteTile(
-                        cliente.id,
-                        nombreCompleto,
-                        'Sin membresía',
-                        context,
-                        onDelete:
-                            () => onEliminarCliente(
-                              context,
-                              cliente.id!,
-                              nombreCompleto,
-                            ),
-                      );
-                    }
+                        '${cliente?.nombres} ${cliente?.apellidos}';
+                    DateTime fechaFin = membresia.fechaFin;
+                    final diasRestantes =
+                        fechaFin.difference(DateTime.now()).inDays;
+                    bool isPersonalizado = membresia.isPersonalizado;
+                    return Utils.buildMembershipTile(
+                      nombreCompleto,
+                      '${Utils.formatDate(fechaFin)} • Faltan $diasRestantes días',
+                      fechaFin,
+                      isPersonalizado,
+                    );
                   }).toList(),
             ),
           ),

@@ -4,6 +4,7 @@ class Cliente {
   String apellidos;
   String? dni;
   String? celular;
+  bool? estado = true;
 
   Cliente({
     this.id,
@@ -11,7 +12,22 @@ class Cliente {
     required this.apellidos,
     this.dni,
     this.celular,
+    this.estado,
   });
+
+  int? get getId => id;
+  String get getNombres => nombres;
+  String get getApellidos => apellidos;
+  String? get getDni => dni;
+  String? get getCelular => celular;
+  bool? get getEstado => estado;
+
+  set setId(int? value) => id = value;
+  set setNombres(String value) => nombres = value;
+  set setApellidos(String value) => apellidos = value;
+  set setDni(String? value) => dni = value;
+  set setCelular(String? value) => celular = value;
+  set setEstado(bool? value) => estado = value;
 
   Map<String, dynamic> toMap() {
     return {
@@ -20,6 +36,7 @@ class Cliente {
       'apellidos': apellidos,
       'dni': dni,
       'celular': celular,
+      'estado': estado,
     };
   }
 
@@ -30,6 +47,15 @@ class Cliente {
       apellidos: map['apellidos'],
       dni: map['dni'],
       celular: map['celular'],
+      estado: map['estado'] == 1 ? true : false,
     );
   }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Cliente && runtimeType == other.runtimeType && id == other.id;
+
+  @override
+  int get hashCode => id.hashCode;
 }
