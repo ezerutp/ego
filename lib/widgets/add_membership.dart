@@ -26,6 +26,7 @@ class _AddMembershipState extends State<AddMembership> {
   late TextEditingController costoController;
   String tipoSeleccionado = 'Normal';
   Cliente? clienteSeleccionado;
+  DateTime? _selectedFechaInicio;
 
   @override
   void initState() {
@@ -82,6 +83,47 @@ class _AddMembershipState extends State<AddMembership> {
                   );
                 }
               },
+            ),
+            const SizedBox(height: 10),
+            Row(
+              children: [
+                const Text('Fecha de inicio:'),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: GestureDetector(
+                    onTap: () async {
+                      DateTime initialDate = DateTime.now();
+                      DateTime? pickedDate = await showDatePicker(
+                        context: context,
+                        initialDate: initialDate,
+                        firstDate: DateTime(2000),
+                        lastDate: DateTime(2100),
+                      );
+                      if (pickedDate != null) {
+                        setState(() {
+                          _selectedFechaInicio = pickedDate;
+                        });
+                      }
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 12,
+                        horizontal: 10,
+                      ),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.grey),
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      child: Text(
+                        _selectedFechaInicio != null
+                            ? Utils.formatearFecha(_selectedFechaInicio!)
+                            : 'Seleccionar fecha',
+                        style: const TextStyle(fontSize: 16),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
             const SizedBox(height: 10),
             Row(
@@ -166,8 +208,11 @@ class _AddMembershipState extends State<AddMembership> {
                       : null;
               Membresia nuevaMembresia = Membresia(
                 clienteId: clienteSeleccionado!.id!,
-                fechaInicio: DateTime.now(),
-                fechaFin: Utils.sumarMeses(DateTime.now(), meses),
+                fechaInicio: _selectedFechaInicio ?? DateTime.now(),
+                fechaFin: Utils.sumarMeses(
+                  _selectedFechaInicio ?? DateTime.now(),
+                  meses,
+                ),
                 costo: costo,
                 tipo: tipoSeleccionado,
               );

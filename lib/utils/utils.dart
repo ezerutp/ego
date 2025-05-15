@@ -1,3 +1,4 @@
+import 'package:ego/models/cliente.dart';
 import 'package:ego/theme/color.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -133,6 +134,7 @@ class Utils {
     BuildContext context, {
     VoidCallback? onEdit,
     VoidCallback? onDelete,
+    VoidCallback? onInfo,
   }) {
     return Card(
       color: AppColors.darkGray,
@@ -149,24 +151,20 @@ class Utils {
           mainAxisSize: MainAxisSize.min,
           children: [
             IconButton(
+              icon: const Icon(Icons.info, color: AppColors.gold),
+              onPressed: onInfo ?? () {},
+            ),
+            /* IconButton(
               icon: const Icon(Icons.edit, color: Colors.blue),
               onPressed:
                   onEdit ??
                   () {
                     print('Editar $name');
                   },
-            ),
+            ), */
             IconButton(
               icon: const Icon(Icons.delete, color: Colors.red),
-              onPressed:
-                  onDelete ??
-                  () {
-                    mostrarDialogoEliminar(
-                      context: context,
-                      nombreCliente: name,
-                      onConfirmar: () {},
-                    );
-                  },
+              onPressed: onDelete ?? () {},
             ),
           ],
         ),
@@ -207,6 +205,39 @@ class Utils {
     );
   }
 
+  static void mostrarDialogoInformacionCliente({
+    required BuildContext context,
+    required Cliente cliente,
+  }) {
+    showDialog(
+      context: context,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          title: const Text('Información del cliente'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Nombre: ${cliente.getNombres} ${cliente.getApellidos}'),
+              const SizedBox(height: 8),
+              Text('DNI: ${cliente.getDni ?? 'No disponible'}'),
+              const SizedBox(height: 8),
+              Text('Celular: ${cliente.getCelular ?? 'No disponible'}'),
+            ],
+          ),
+          actions: [
+            TextButton(
+              child: const Text('Cerrar'),
+              onPressed: () {
+                Navigator.of(dialogContext).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   /// Método para mostrar un mensaje en un SnackBar
   static void mostrarMensaje({
     required BuildContext context,
@@ -220,6 +251,11 @@ class Utils {
         duration: const Duration(seconds: 3),
       ),
     );
+  }
+
+  /// Alias para formatDate en español
+  static String formatearFecha(DateTime fecha) {
+    return formatDate(fecha);
   }
 
   /// Método para sumar meses a una fecha

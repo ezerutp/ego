@@ -104,6 +104,11 @@ class MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  void _onClienteInfoPressed(BuildContext context, int clienteId) {
+    final cliente = _clientes.firstWhere((c) => c.id == clienteId);
+    Utils.mostrarDialogoInformacionCliente(context: context, cliente: cliente);
+  }
+
   void _confirmarYEliminarCliente(
     BuildContext context,
     int clienteId,
@@ -191,6 +196,7 @@ class MyHomePageState extends State<MyHomePage> {
         _stats,
         _onAddClientePressed,
         _membresiasPorCliente,
+        _onClienteInfoPressed,
         _confirmarYEliminarCliente,
       ),
 
