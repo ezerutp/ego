@@ -14,7 +14,10 @@ class Utils {
     String status,
     DateTime? date,
     bool isPersonalizado,
-  ) {
+    BuildContext context, {
+    VoidCallback? onEdit,
+    VoidCallback? onUpdate,
+  }) {
     return Card(
       color: isPersonalizado ? AppColors.gold : AppColors.darkGray,
       margin: const EdgeInsets.symmetric(vertical: 8),
@@ -38,11 +41,87 @@ class Utils {
             Icons.update,
             color: isPersonalizado ? AppColors.black : AppColors.white,
           ),
-          onPressed: () {
-            print('Extender membresía de $name');
-          },
+          onPressed: onUpdate ?? () {},
         ),
       ),
+    );
+  }
+
+  static void mostrarDialogoAumentarMembresia({
+    required BuildContext context,
+    required String nombreCliente,
+    required DateTime fechaInicio,
+    required DateTime fechaFin,
+    required Function(int meses) onConfirmar,
+  }) {
+    int mesesAumentar = 1;
+
+    showDialog(
+      context: context,
+      builder: (BuildContext dialogContext) {
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return AlertDialog(
+              title: const Text('Aumentar membresía'),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Cliente: $nombreCliente'),
+                  const SizedBox(height: 8),
+                  Text('Fecha de inicio: ${Utils.formatDate(fechaInicio)}'),
+                  Text('Fecha de fin actual: ${Utils.formatDate(fechaFin)}'),
+                  const SizedBox(height: 16),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text('Meses a aumentar:'),
+                      Row(
+                        children: [
+                          IconButton(
+                            icon: const Icon(Icons.remove),
+                            onPressed: () {
+                              if (mesesAumentar > 1) {
+                                setState(() {
+                                  mesesAumentar--;
+                                });
+                              }
+                            },
+                          ),
+                          Text('$mesesAumentar'),
+                          IconButton(
+                            icon: const Icon(Icons.add),
+                            onPressed: () {
+                              setState(() {
+                                mesesAumentar++;
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              actions: [
+                TextButton(
+                  child: const Text('Cancelar'),
+                  onPressed: () {
+                    Navigator.of(dialogContext).pop();
+                  },
+                ),
+                TextButton(
+                  child: const Text('Confirmar'),
+                  onPressed: () {
+                    Navigator.of(dialogContext).pop();
+                    onConfirmar(mesesAumentar);
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      },
     );
   }
 
@@ -107,7 +186,7 @@ class Utils {
       builder: (BuildContext dialogContext) {
         return AlertDialog(
           title: const Text('Confirmar eliminación'),
-          content: Text('¿Deseas eliminar al cliente "$nombreCliente"?'),
+          content: Text('¿Deseas eliminar al cliente $nombreCliente?'),
           actions: [
             TextButton(
               child: const Text('Cancelar'),
@@ -141,5 +220,19 @@ class Utils {
         duration: const Duration(seconds: 3),
       ),
     );
+  }
+
+  /// Método para sumar meses a una fecha
+  static DateTime sumarMeses(DateTime fecha, int cantidadMeses) {
+    int nuevoMes = fecha.month + cantidadMeses;
+    int nuevoAnio = fecha.year + ((nuevoMes - 1) ~/ 12);
+    nuevoMes = ((nuevoMes - 1) % 12) + 1;
+
+    int dia = fecha.day;
+    // Ajustar el día si el nuevo mes no tiene ese día
+    int ultimoDiaDelMes = DateTime(nuevoAnio, nuevoMes + 1, 0).day;
+    if (dia > ultimoDiaDelMes) dia = ultimoDiaDelMes;
+
+    return DateTime(nuevoAnio, nuevoMes, dia);
   }
 }

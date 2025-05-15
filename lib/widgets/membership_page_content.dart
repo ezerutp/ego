@@ -7,10 +7,12 @@ import '../theme/color.dart';
 
 class MemberPageContent {
   static Widget buildHomePage(
+    BuildContext context,
     List<Membresia> membresias,
     MembresiaStats stats,
     Function onAddMembershipPressed,
     Map<int, Cliente?> clientePorMembresia,
+    Function(BuildContext context, int id, String nombre) actualizarMembresia,
   ) {
     return Padding(
       padding: const EdgeInsets.all(16),
@@ -81,6 +83,13 @@ class MemberPageContent {
                       '${Utils.formatDate(fechaFin)} • Faltan $diasRestantes días',
                       fechaFin,
                       isPersonalizado,
+                      context,
+                      onUpdate:
+                          () => actualizarMembresia(
+                            context,
+                            membresia.id!,
+                            nombreCompleto,
+                          ),
                     );
                   }).toList(),
             ),

@@ -95,9 +95,7 @@ class _AddMembershipState extends State<AddMembership> {
                       onPressed: () {
                         int meses = int.tryParse(mesesController.text) ?? 1;
                         if (meses > 1) {
-                          setState(() {
-                            mesesController.text = (meses - 1).toString();
-                          });
+                          mesesController.text = (meses - 1).toString();
                         }
                       },
                     ),
@@ -114,9 +112,7 @@ class _AddMembershipState extends State<AddMembership> {
                       icon: const Icon(Icons.add),
                       onPressed: () {
                         int meses = int.tryParse(mesesController.text) ?? 1;
-                        setState(() {
-                          mesesController.text = (meses + 1).toString();
-                        });
+                        mesesController.text = (meses + 1).toString();
                       },
                     ),
                   ],
@@ -130,20 +126,24 @@ class _AddMembershipState extends State<AddMembership> {
               keyboardType: TextInputType.number,
             ),
             const SizedBox(height: 10),
-            DropdownButton<String>(
-              isExpanded: true,
-              value: tipoSeleccionado,
-              items:
-                  ['Normal', 'Personalizado'].map((String tipo) {
-                    return DropdownMenuItem<String>(
-                      value: tipo,
-                      child: Text(tipo),
-                    );
-                  }).toList(),
-              onChanged: (String? newValue) {
-                setState(() {
-                  tipoSeleccionado = newValue!;
-                });
+            StatefulBuilder(
+              builder: (context, localSetState) {
+                return DropdownButton<String>(
+                  isExpanded: true,
+                  value: tipoSeleccionado,
+                  items:
+                      ['Normal', 'Personalizado'].map((String tipo) {
+                        return DropdownMenuItem<String>(
+                          value: tipo,
+                          child: Text(tipo),
+                        );
+                      }).toList(),
+                  onChanged: (String? newValue) {
+                    localSetState(() {
+                      tipoSeleccionado = newValue!;
+                    });
+                  },
+                );
               },
             ),
           ],
@@ -164,11 +164,10 @@ class _AddMembershipState extends State<AddMembership> {
                   costoController.text.isNotEmpty
                       ? double.tryParse(costoController.text)
                       : null;
-              int dias = meses * 30; // Convertir meses a días
               Membresia nuevaMembresia = Membresia(
                 clienteId: clienteSeleccionado!.id!,
                 fechaInicio: DateTime.now(),
-                fechaFin: DateTime.now().add(Duration(days: dias)),
+                fechaFin: Utils.sumarMeses(DateTime.now(), meses),
                 costo: costo,
                 tipo: tipoSeleccionado,
               );

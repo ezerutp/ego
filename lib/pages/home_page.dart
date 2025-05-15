@@ -52,7 +52,7 @@ class MyHomePageState extends State<MyHomePage> {
     //Test test = Test();
     //await test.initTestData(); // Inicializa los datos de prueba
     //await test.insertMembresias(); // Inserta membresías de prueba
-    _getTestData();
+    _getData();
   }
 
   // metodo para el boton
@@ -63,7 +63,7 @@ class MyHomePageState extends State<MyHomePage> {
   }
 
   // metodo para cargar los datos de clientes, membresias y estadisticas
-  void _getTestData() async {
+  void _getData() async {
     await _cargarClientes();
     await _cargarMembresias();
     await _cargarEstadisticas();
@@ -114,7 +114,43 @@ class MyHomePageState extends State<MyHomePage> {
       nombreCliente: nombreCliente,
       onConfirmar: () async {
         await _clienteRepository.eliminarCliente(clienteId);
-        _getTestData(); // actualiza estado con setState()
+        _getData(); // actualiza estado con setState()
+      },
+    );
+  }
+
+  // CORREGIR ESTO PIPIPI
+  Future<void> _confirmarActualizarMembresia(
+    BuildContext context,
+    int membresiaId,
+    String nombreMembresia,
+  ) async {
+    final membresia = await _membresiaRespository.getMembresiaById(membresiaId);
+
+    if (membresia == null) {
+      Utils.mostrarMensaje(
+        context: context,
+        mensaje: 'No se encontró la membresía',
+      );
+      return;
+    }
+    Utils.mostrarDialogoAumentarMembresia(
+      context: context,
+      nombreCliente: nombreMembresia,
+      fechaInicio: membresia.fechaInicio,
+      fechaFin: membresia.fechaFin,
+      onConfirmar: (int meses) async {
+        membresia.fechaFin = Utils.sumarMeses(membresia.fechaFin, meses);
+
+        await _membresiaRespository.updateMembresia(membresia);
+
+        Utils.mostrarMensaje(
+          context: context,
+          mensaje: 'Membresía extendida $meses mes${meses > 1 ? "es" : ""}.',
+          backgroundColor: Colors.green,
+        );
+
+        _getData();
       },
     );
   }
@@ -125,7 +161,7 @@ class MyHomePageState extends State<MyHomePage> {
       builder: (BuildContext context) {
         return AddClienteDialog(
           clienteRepository: _clienteRepository,
-          onClienteAdded: _getTestData,
+          onClienteAdded: _getData,
         );
       },
     );
@@ -138,7 +174,7 @@ class MyHomePageState extends State<MyHomePage> {
         return AddMembership(
           membresiaRespository: _membresiaRespository,
           clienteRepository: _clienteRepository,
-          onMembershipAdded: _getTestData,
+          onMembershipAdded: _getData,
         );
       },
     );
@@ -160,10 +196,12 @@ class MyHomePageState extends State<MyHomePage> {
 
       // Vista Membresías
       MemberPageContent.buildHomePage(
+        context,
         _membresias,
         _membresiaStats,
         _onAddMembershipPressed,
         _clientesPorMembresia,
+        _confirmarActualizarMembresia,
       ),
 
       // Vista Notificaciones

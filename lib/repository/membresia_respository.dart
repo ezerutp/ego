@@ -19,17 +19,32 @@ class MembresiaRespository {
       if (!result.fechaFin.isBefore(membresia.fechaFin)) {
         membresia.fechaFin = result.fechaFin;
       }
-      await updateMembresia(membresia.toMap());
+      await updateMembresia(membresia);
     }
   }
 
-  Future<int> updateMembresia(Map<String, dynamic> membresia) async {
+  Future<Membresia?> getMembresiaById(int id) async {
+    final db = await _databaseService.database;
+    final result = await db.query(
+      'membresias',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+
+    if (result.isNotEmpty) {
+      return Membresia.fromMap(result.first);
+    } else {
+      return null;
+    }
+  }
+
+  Future<int> updateMembresia(Membresia membresia) async {
     final db = await _databaseService.database;
     return await db.update(
       'membresias',
-      membresia,
+      membresia.toMap(),
       where: 'id = ?',
-      whereArgs: [membresia['id']],
+      whereArgs: [membresia.id],
     );
   }
 
