@@ -1,5 +1,4 @@
 import 'package:ego/models/cliente.dart';
-import 'package:ego/theme/color.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -7,45 +6,6 @@ class Utils {
   /// Método para formatear la fecha en el formato deseado
   static String formatDate(DateTime date) {
     return DateFormat('dd/MM/yyyy').format(date);
-  }
-
-  /// Método para construir la página de inicio (las cards de los miembros)
-  static Widget buildMembershipTile(
-    String name,
-    String status,
-    DateTime? date,
-    bool isPersonalizado,
-    BuildContext context, {
-    VoidCallback? onEdit,
-    VoidCallback? onUpdate,
-  }) {
-    return Card(
-      color: isPersonalizado ? AppColors.gold : AppColors.darkGray,
-      margin: const EdgeInsets.symmetric(vertical: 8),
-      child: ListTile(
-        title: Text(
-          name,
-          style: TextStyle(
-            color: isPersonalizado ? AppColors.black : Colors.white,
-            fontWeight: isPersonalizado ? FontWeight.bold : FontWeight.normal,
-          ),
-        ),
-        subtitle: Text(
-          status,
-          style: TextStyle(
-            color: isPersonalizado ? AppColors.black : AppColors.green,
-            fontWeight: isPersonalizado ? FontWeight.bold : FontWeight.normal,
-          ),
-        ),
-        trailing: IconButton(
-          icon: Icon(
-            Icons.update,
-            color: isPersonalizado ? AppColors.black : AppColors.white,
-          ),
-          onPressed: onUpdate ?? () {},
-        ),
-      ),
-    );
   }
 
   static void mostrarDialogoAumentarMembresia({
@@ -56,7 +16,6 @@ class Utils {
     required Function(int meses) onConfirmar,
   }) {
     int mesesAumentar = 1;
-
     showDialog(
       context: context,
       builder: (BuildContext dialogContext) {
@@ -123,52 +82,6 @@ class Utils {
           },
         );
       },
-    );
-  }
-
-  /// Método para construir la página de inicio (las cards de los clientes)
-  static Widget buildClienteTile(
-    int? id,
-    String name,
-    String status,
-    BuildContext context, {
-    VoidCallback? onEdit,
-    VoidCallback? onDelete,
-    VoidCallback? onInfo,
-  }) {
-    return Card(
-      color: AppColors.darkGray,
-      margin: const EdgeInsets.symmetric(vertical: 8),
-      child: ListTile(
-        title: Text(name, style: const TextStyle(color: Colors.white)),
-        subtitle: Text(
-          status,
-          style: TextStyle(
-            color: status == 'Activo' ? AppColors.green : AppColors.red,
-          ),
-        ),
-        trailing: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            IconButton(
-              icon: const Icon(Icons.info, color: AppColors.gold),
-              onPressed: onInfo ?? () {},
-            ),
-            /* IconButton(
-              icon: const Icon(Icons.edit, color: Colors.blue),
-              onPressed:
-                  onEdit ??
-                  () {
-                    print('Editar $name');
-                  },
-            ), */
-            IconButton(
-              icon: const Icon(Icons.delete, color: Colors.red),
-              onPressed: onDelete ?? () {},
-            ),
-          ],
-        ),
-      ),
     );
   }
 

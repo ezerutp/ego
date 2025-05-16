@@ -1,5 +1,6 @@
 import 'package:ego/models/membresia_stats.dart';
 import 'package:ego/utils/utils.dart';
+import 'package:ego/widgets/card_membership.dart';
 import 'package:flutter/material.dart';
 import '../models/cliente.dart';
 import '../models/membresia.dart';
@@ -86,12 +87,10 @@ class MemberPageContent {
                       fechaTexto =
                           '${Utils.formatDate(fechaFin)} • Faltan $diasRestantes días';
                     }
-                    return Utils.buildMembershipTile(
+                    return CardMembership.buildMembershipTile(
                       nombreCompleto,
                       fechaTexto,
-                      fechaFin,
                       isPersonalizado,
-                      context,
                       onUpdate:
                           () => actualizarMembresia(
                             context,

@@ -1,5 +1,5 @@
 import 'package:ego/models/cliente_stats.dart';
-import 'package:ego/utils/utils.dart';
+import 'package:ego/widgets/card_cliente.dart';
 import 'package:flutter/material.dart';
 import '../models/cliente.dart';
 import '../models/membresia.dart';
@@ -76,11 +76,9 @@ class HomePageContent {
                         '${cliente.nombres} ${cliente.apellidos}';
                     var membresia = membresiasPorCliente[cliente.id];
                     if (membresia != null) {
-                      return Utils.buildClienteTile(
-                        cliente.id,
+                      return CardCliente.buildClienteTile(
                         nombreCompleto,
                         'Activo',
-                        context,
                         onInfo:
                             () => onInformacionCliente(context, cliente.id!),
                         onDelete:
@@ -91,11 +89,9 @@ class HomePageContent {
                             ),
                       );
                     } else {
-                      return Utils.buildClienteTile(
-                        cliente.id,
+                      return CardCliente.buildClienteTile(
                         nombreCompleto,
                         'Sin membresía',
-                        context,
                         onInfo:
                             () => onInformacionCliente(context, cliente.id!),
                         onDelete:
