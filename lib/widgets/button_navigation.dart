@@ -27,10 +27,8 @@ class CustomBottomNavigationBar extends StatelessWidget {
           icon: Icon(Icons.card_membership),
           label: 'Membresías',
         ),
-        /* BottomNavigationBarItem(
-          icon: Icon(Icons.notifications),
-          label: 'Notificaciones',
-        ),
+        BottomNavigationBarItem(icon: Icon(Icons.backup), label: 'Backup'),
+        /*
         BottomNavigationBarItem(
           icon: Icon(Icons.settings),
           label: 'Configuración',

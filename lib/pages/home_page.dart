@@ -3,6 +3,7 @@ import 'package:ego/models/cliente.dart';
 import 'package:ego/models/cliente_stats.dart';
 import 'package:ego/models/membresia_stats.dart';
 import 'package:ego/repository/stats_repository.dart';
+import 'package:ego/utils/backup.dart';
 import 'package:ego/utils/utils.dart';
 import 'package:ego/widgets/add_cliente.dart';
 import 'package:ego/widgets/add_membership.dart';
@@ -208,6 +209,26 @@ class MyHomePageState extends State<MyHomePage> {
         _onAddMembershipPressed,
         _clientesPorMembresia,
         _confirmarActualizarMembresia,
+      ),
+
+      // Vista Backup
+      Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text(
+              'Backup',
+              style: TextStyle(color: Colors.white, fontSize: 24),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                Backup.createBackup(context);
+              },
+              child: const Text('Crear Backup'),
+            ),
+          ],
+        ),
       ),
 
       // Vista Notificaciones

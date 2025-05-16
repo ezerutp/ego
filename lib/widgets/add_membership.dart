@@ -50,38 +50,42 @@ class _AddMembershipState extends State<AddMembership> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            FutureBuilder<List<Cliente>>(
-              future:
-                  widget.clienteRepository
-                      .getClientesActivosAndSinMebresiaActiva(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const CircularProgressIndicator();
-                } else if (snapshot.hasError) {
-                  return const Text('Error al cargar clientes');
-                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return const Text('No hay clientes disponibles');
-                } else {
-                  return DropdownButton<Cliente>(
-                    isExpanded: true,
-                    value: clienteSeleccionado,
-                    hint: const Text('Seleccione un cliente'),
-                    items:
-                        snapshot.data!.map((Cliente cliente) {
-                          return DropdownMenuItem<Cliente>(
-                            value: cliente,
-                            child: Text(
-                              '${cliente.nombres} ${cliente.apellidos}',
-                            ),
-                          );
-                        }).toList(),
-                    onChanged: (Cliente? newValue) {
-                      setState(() {
-                        clienteSeleccionado = newValue;
-                      });
-                    },
-                  );
-                }
+            StatefulBuilder(
+              builder: (context, localSetState) {
+                return FutureBuilder<List<Cliente>>(
+                  future:
+                      widget.clienteRepository
+                          .getClientesActivosAndSinMebresiaActiva(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const CircularProgressIndicator();
+                    } else if (snapshot.hasError) {
+                      return const Text('Error al cargar clientes');
+                    } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                      return const Text('No hay clientes disponibles');
+                    } else {
+                      return DropdownButton<Cliente>(
+                        isExpanded: true,
+                        value: clienteSeleccionado,
+                        hint: const Text('Seleccione un cliente'),
+                        items:
+                            snapshot.data!.map((Cliente cliente) {
+                              return DropdownMenuItem<Cliente>(
+                                value: cliente,
+                                child: Text(
+                                  '${cliente.nombres} ${cliente.apellidos}',
+                                ),
+                              );
+                            }).toList(),
+                        onChanged: (Cliente? newValue) {
+                          localSetState(() {
+                            clienteSeleccionado = newValue;
+                          });
+                        },
+                      );
+                    }
+                  },
+                );
               },
             ),
             const SizedBox(height: 10),
@@ -116,7 +120,7 @@ class _AddMembershipState extends State<AddMembership> {
                       ),
                       child: Text(
                         _selectedFechaInicio != null
-                            ? Utils.formatearFecha(_selectedFechaInicio!)
+                            ? Utils.formatDate(_selectedFechaInicio!)
                             : 'Seleccionar fecha',
                         style: const TextStyle(fontSize: 16),
                       ),

@@ -253,11 +253,6 @@ class Utils {
     );
   }
 
-  /// Alias para formatDate en español
-  static String formatearFecha(DateTime fecha) {
-    return formatDate(fecha);
-  }
-
   /// Método para sumar meses a una fecha
   static DateTime sumarMeses(DateTime fecha, int cantidadMeses) {
     int nuevoMes = fecha.month + cantidadMeses;

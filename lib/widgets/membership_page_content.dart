@@ -78,9 +78,17 @@ class MemberPageContent {
                     final diasRestantes =
                         fechaFin.difference(DateTime.now()).inDays;
                     bool isPersonalizado = membresia.isPersonalizado;
+                    String fechaTexto;
+                    if (diasRestantes == 0) {
+                      fechaTexto =
+                          '${Utils.formatDate(fechaFin)} • ¡Vence hoy!';
+                    } else {
+                      fechaTexto =
+                          '${Utils.formatDate(fechaFin)} • Faltan $diasRestantes días';
+                    }
                     return Utils.buildMembershipTile(
                       nombreCompleto,
-                      '${Utils.formatDate(fechaFin)} • Faltan $diasRestantes días',
+                      fechaTexto,
                       fechaFin,
                       isPersonalizado,
                       context,
