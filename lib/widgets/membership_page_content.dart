@@ -1,5 +1,4 @@
 import 'package:ego/models/membresia_stats.dart';
-import 'package:ego/utils/utils.dart';
 import 'package:ego/widgets/card_membership.dart';
 import 'package:flutter/material.dart';
 import '../models/cliente.dart';
@@ -73,29 +72,14 @@ class MemberPageContent {
               children:
                   membresias.map((membresia) {
                     var cliente = clientePorMembresia[membresia.clienteId];
-                    var nombreCompleto =
-                        '${cliente?.nombres} ${cliente?.apellidos}';
-                    DateTime fechaFin = membresia.fechaFin;
-                    final diasRestantes =
-                        fechaFin.difference(DateTime.now()).inDays;
-                    bool isPersonalizado = membresia.isPersonalizado;
-                    String fechaTexto;
-                    if (diasRestantes == 0) {
-                      fechaTexto =
-                          '${Utils.formatDate(fechaFin)} • ¡Vence hoy!';
-                    } else {
-                      fechaTexto =
-                          '${Utils.formatDate(fechaFin)} • Faltan $diasRestantes días';
-                    }
-                    return CardMembership.buildMembershipTile(
-                      nombreCompleto,
-                      fechaTexto,
-                      isPersonalizado,
+                    return CardMembership(
+                      cliente: cliente!,
+                      membership: membresia,
                       onUpdate:
                           () => actualizarMembresia(
                             context,
                             membresia.id!,
-                            nombreCompleto,
+                            '${cliente.nombres} ${cliente.apellidos}',
                           ),
                     );
                   }).toList(),

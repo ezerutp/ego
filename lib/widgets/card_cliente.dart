@@ -1,20 +1,38 @@
+import 'package:ego/models/cliente.dart';
 import 'package:ego/theme/color.dart';
 import 'package:flutter/material.dart';
 
-class CardCliente {
+class CardCliente extends StatelessWidget {
+  final Cliente cliente;
+  final bool tieneMembresia;
+  final VoidCallback? onEdit;
+  final VoidCallback? onDelete;
+  final VoidCallback? onInfo;
+
+  const CardCliente({
+    super.key,
+    required this.cliente,
+    required this.tieneMembresia,
+    this.onEdit,
+    this.onDelete,
+    this.onInfo,
+  });
+
+  String get nombreCompleto => '${cliente.nombres} ${cliente.apellidos}';
+
+  String get status => tieneMembresia ? 'Activo' : 'Sin membresía';
+
   /// Método para construir la página de inicio (las cards de los clientes)
-  static Widget buildClienteTile(
-    String name,
-    String status, {
-    VoidCallback? onEdit,
-    VoidCallback? onDelete,
-    VoidCallback? onInfo,
-  }) {
+  @override
+  Widget build(BuildContext context) {
     return Card(
       color: AppColors.darkGray,
       margin: const EdgeInsets.symmetric(vertical: 8),
       child: ListTile(
-        title: Text(name, style: const TextStyle(color: Colors.white)),
+        title: Text(
+          nombreCompleto,
+          style: const TextStyle(color: Colors.white),
+        ),
         subtitle: Text(
           status,
           style: TextStyle(
@@ -33,7 +51,7 @@ class CardCliente {
               onPressed:
                   onEdit ??
                   () {
-                    print('Editar $name');
+                    print('Editar $nombreCompleto');
                   },
             ),
             IconButton(

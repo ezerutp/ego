@@ -72,36 +72,19 @@ class HomePageContent {
             child: ListView(
               children:
                   clientes.map((cliente) {
-                    var nombreCompleto =
-                        '${cliente.nombres} ${cliente.apellidos}';
-                    var membresia = membresiasPorCliente[cliente.id];
-                    if (membresia != null) {
-                      return CardCliente.buildClienteTile(
-                        nombreCompleto,
-                        'Activo',
-                        onInfo:
-                            () => onInformacionCliente(context, cliente.id!),
-                        onDelete:
-                            () => onEliminarCliente(
-                              context,
-                              cliente.id!,
-                              nombreCompleto,
-                            ),
-                      );
-                    } else {
-                      return CardCliente.buildClienteTile(
-                        nombreCompleto,
-                        'Sin membresía',
-                        onInfo:
-                            () => onInformacionCliente(context, cliente.id!),
-                        onDelete:
-                            () => onEliminarCliente(
-                              context,
-                              cliente.id!,
-                              nombreCompleto,
-                            ),
-                      );
-                    }
+                    final tieneMembresia =
+                        membresiasPorCliente[cliente.id] != null;
+                    return CardCliente(
+                      cliente: cliente,
+                      tieneMembresia: tieneMembresia,
+                      onInfo: () => onInformacionCliente(context, cliente.id!),
+                      onDelete:
+                          () => onEliminarCliente(
+                            context,
+                            cliente.id!,
+                            '${cliente.nombres} ${cliente.apellidos}',
+                          ),
+                    );
                   }).toList(),
             ),
           ),
