@@ -1,7 +1,7 @@
+import 'package:ego/widgets/dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:ego/models/cliente.dart';
 import 'package:ego/repository/cliente_repository.dart';
-import 'package:ego/utils/utils.dart';
 
 class AddClienteDialog extends StatelessWidget {
   final ClienteRepository clienteRepository;
@@ -76,7 +76,7 @@ class AddClienteDialog extends StatelessWidget {
               onClienteAdded();
               Navigator.of(context).pop();
             } else {
-              Utils.mostrarMensaje(
+              CustomDialogos.mostrarMensaje(
                 context: context,
                 mensaje: 'Por favor, complete todos los campos.',
               );

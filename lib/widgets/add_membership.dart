@@ -3,6 +3,7 @@ import 'package:ego/models/membresia.dart';
 import 'package:ego/repository/cliente_repository.dart';
 import 'package:ego/repository/membresia_respository.dart';
 import 'package:ego/utils/utils.dart';
+import 'package:ego/widgets/dialog.dart';
 import 'package:flutter/material.dart';
 
 class AddMembership extends StatefulWidget {
@@ -228,7 +229,7 @@ class _AddMembershipState extends State<AddMembership> {
                   .onMembershipAdded(); // Notificar que se añadió una membresía
               Navigator.of(context).pop();
             } else {
-              Utils.mostrarMensaje(
+              CustomDialogos.mostrarMensaje(
                 context: context,
                 mensaje: 'Por favor, seleccione un cliente.',
               );
