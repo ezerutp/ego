@@ -29,8 +29,17 @@ class MyHomePageState extends State<MyHomePage> {
   final Map<int, Membresia?> _membresiasPorCliente = {};
   final Map<int, Cliente?> _clientesPorMembresia = {};
 
-  late final ClienteStats _stats;
-  late final MembresiaStats _membresiaStats;
+  ClienteStats _stats = ClienteStats(
+    totalReal: 0,
+    totalActivos: 0,
+    conMembresia: 0,
+    sinMembresia: 0,
+  );
+  MembresiaStats _membresiaStats = MembresiaStats(
+    totalMembresias: 0,
+    totalNormales: 0,
+    totalPersonalizados: 0,
+  );
 
   // Variables para el estado de la aplicación
   int _selectedIndex = 0;
