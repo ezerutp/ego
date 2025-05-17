@@ -1,5 +1,6 @@
 class Cliente {
   int? id;
+  String? apodo;
   String nombres;
   String apellidos;
   String? dni;
@@ -8,6 +9,7 @@ class Cliente {
 
   Cliente({
     this.id,
+    this.apodo,
     required this.nombres,
     required this.apellidos,
     this.dni,
@@ -16,6 +18,7 @@ class Cliente {
   });
 
   int? get getId => id;
+  String? get getApodo => apodo;
   String get getNombres => nombres;
   String get getApellidos => apellidos;
   String? get getDni => dni;
@@ -23,6 +26,7 @@ class Cliente {
   bool? get getEstado => estado;
 
   set setId(int? value) => id = value;
+  set setApodo(String? value) => apodo = value;
   set setNombres(String value) => nombres = value;
   set setApellidos(String value) => apellidos = value;
   set setDni(String? value) => dni = value;
@@ -32,6 +36,7 @@ class Cliente {
   Map<String, dynamic> toMap() {
     return {
       'id': id,
+      'apodo': apodo,
       'nombres': nombres,
       'apellidos': apellidos,
       'dni': dni,
@@ -43,6 +48,7 @@ class Cliente {
   factory Cliente.fromMap(Map<String, dynamic> map) {
     return Cliente(
       id: map['id'],
+      apodo: map['apodo'],
       nombres: map['nombres'],
       apellidos: map['apellidos'],
       dni: map['dni'],

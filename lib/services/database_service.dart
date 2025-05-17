@@ -21,6 +21,7 @@ class DatabaseService {
     await db.execute('''
       CREATE TABLE clientes (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
+        apodo TEXT,
         nombres TEXT,
         apellidos TEXT,
         dni TEXT,
@@ -35,6 +36,8 @@ class DatabaseService {
         clienteId INTEGER,
         fechaInicio TEXT,
         fechaFin TEXT,
+        fechaCancelacion TEXT,
+        cancelada INTEGER DEFAULT 0,
         tipo TEXT,
         costo REAL,
         FOREIGN KEY (clienteId) REFERENCES clientes (id)

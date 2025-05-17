@@ -13,6 +13,7 @@ class MemberPageContent {
     Function onAddMembershipPressed,
     Map<int, Cliente?> clientePorMembresia,
     Function(BuildContext context, int id, String nombre) actualizarMembresia,
+    Function(BuildContext context, int id, String nombre) eliminarMembresia,
   ) {
     return Padding(
       padding: const EdgeInsets.all(16),
@@ -77,6 +78,12 @@ class MemberPageContent {
                       membership: membresia,
                       onUpdate:
                           () => actualizarMembresia(
+                            context,
+                            membresia.id!,
+                            '${cliente.nombres} ${cliente.apellidos}',
+                          ),
+                      onDelete:
+                          () => eliminarMembresia(
                             context,
                             membresia.id!,
                             '${cliente.nombres} ${cliente.apellidos}',

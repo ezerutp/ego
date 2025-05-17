@@ -125,6 +125,21 @@ class MyHomePageState extends State<MyHomePage> {
     );
   }
 
+  void _confirmarEliminarMembresia(
+    BuildContext context,
+    int membresiaId,
+    String nombreMembresia,
+  ) {
+    Utils.mostrarDialogoEliminar(
+      context: context,
+      nombreCliente: nombreMembresia,
+      onConfirmar: () async {
+        await _membresiaRespository.cancelarMembresia(membresiaId);
+        _getData(); // actualiza estado con setState()
+      },
+    );
+  }
+
   // CORREGIR ESTO PIPIPI
   Future<void> _confirmarActualizarMembresia(
     BuildContext context,
@@ -209,6 +224,7 @@ class MyHomePageState extends State<MyHomePage> {
         _onAddMembershipPressed,
         _clientesPorMembresia,
         _confirmarActualizarMembresia,
+        _confirmarEliminarMembresia,
       ),
 
       // Vista Backup

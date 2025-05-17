@@ -3,7 +3,9 @@ class Membresia {
   int clienteId;
   DateTime fechaInicio;
   DateTime fechaFin;
-  String? tipo;
+  DateTime? fechaCancelacion;
+  bool cancelada = false;
+  String tipo;
   double? costo;
 
   Membresia({
@@ -11,7 +13,9 @@ class Membresia {
     required this.clienteId,
     required this.fechaInicio,
     required this.fechaFin,
-    this.tipo,
+    this.fechaCancelacion,
+    this.cancelada = false,
+    required this.tipo,
     this.costo,
   });
 
@@ -24,6 +28,8 @@ class Membresia {
   int get getClienteId => clienteId;
   DateTime get getFechaInicio => fechaInicio;
   DateTime get getFechaFin => fechaFin;
+  DateTime? get getFechaCancelacion => fechaCancelacion;
+  bool get getCancelada => cancelada;
   String? get getTipo => tipo;
   double? get getCosto => costo;
   bool get isPersonalizado => tipo == 'Personalizado' ? true : false;
@@ -32,7 +38,9 @@ class Membresia {
   set setClienteId(int value) => clienteId = value;
   set setFechaInicio(DateTime value) => fechaInicio = value;
   set setFechaFin(DateTime value) => fechaFin = value;
-  set setTipo(String? value) => tipo = value;
+  set setFechaCancelacion(DateTime? value) => fechaCancelacion = value;
+  set setCancelada(bool value) => cancelada = value;
+  set setTipo(String value) => tipo = value;
   set setCosto(double? value) => costo = value;
 
   Map<String, dynamic> toMap() {
@@ -41,6 +49,8 @@ class Membresia {
       'clienteId': clienteId,
       'fechaInicio': fechaInicio.toIso8601String(),
       'fechaFin': fechaFin.toIso8601String(),
+      'fechaCancelacion': fechaCancelacion?.toIso8601String(),
+      'cancelada': cancelada ? 1 : 0,
       'tipo': tipo,
       'costo': costo,
     };
@@ -52,6 +62,11 @@ class Membresia {
       clienteId: map['clienteId'],
       fechaInicio: DateTime.parse(map['fechaInicio']),
       fechaFin: DateTime.parse(map['fechaFin']),
+      fechaCancelacion:
+          map['fechaCancelacion'] != null
+              ? DateTime.parse(map['fechaCancelacion'])
+              : null,
+      cancelada: map['cancelada'] == 1 ? true : false,
       tipo: map['tipo'],
       costo: map['costo'],
     );

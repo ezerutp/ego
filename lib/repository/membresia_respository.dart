@@ -12,6 +12,7 @@ class MembresiaRespository {
   Future<void> registrarMembresia(Membresia membresia) async {
     final result = await getMembresiaActivaByClienteId(membresia.clienteId);
     if (result == null) {
+      membresia.cancelada = false;
       await _insertMembresia(membresia);
     } else {
       membresia.id = result.id;
@@ -67,7 +68,8 @@ class MembresiaRespository {
     final db = await _databaseService.database;
     final result = await db.query(
       'membresias',
-      where: 'clienteId = ? AND date(fechaFin) >= date("now")',
+      where:
+          'clienteId = ? AND date(fechaFin) >= date("now") AND cancelada = 0',
       whereArgs: [id],
     );
 
@@ -82,7 +84,7 @@ class MembresiaRespository {
     final db = await _databaseService.database;
     final result = await db.query(
       'membresias',
-      where: 'date(fechaFin) >= date("now")',
+      where: 'date(fechaFin) >= date("now") AND cancelada = 0',
       orderBy: 'fechaFin ASC',
     );
     return result.map((map) => Membresia.fromMap(map)).toList();
@@ -92,7 +94,7 @@ class MembresiaRespository {
     final db = await _databaseService.database;
     final result = await db.query(
       'membresias',
-      where: 'tipo = ? AND date(fechaFin) >= date("now")',
+      where: 'tipo = ? AND date(fechaFin) >= date("now") AND cancelada = 0',
       whereArgs: [tipo.toDbValue],
       orderBy: 'fechaFin ASC',
     );
@@ -103,6 +105,17 @@ class MembresiaRespository {
     final db = await _databaseService.database;
     final result = await db.query('membresias', orderBy: 'fechaFin DESC');
     return result.map((map) => Membresia.fromMap(map)).toList();
+  }
+
+  Future<void> cancelarMembresia(int id) async {
+    DateTime fechaCancelacion = DateTime.now();
+    final db = await _databaseService.database;
+    await db.update(
+      'membresias',
+      {'cancelada': 1, 'fechaCancelacion': fechaCancelacion.toIso8601String()},
+      where: 'id = ?',
+      whereArgs: [id],
+    );
   }
 }
 

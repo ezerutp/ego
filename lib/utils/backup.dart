@@ -23,7 +23,7 @@ class Backup {
     List<Membresia> membresias = await MembresiaRespository().getMembresias();
 
     List<List<String>> clienteCsv = [
-      ['ID', 'Nombre', 'Apellido', 'DNI', 'Celular'],
+      ['ID', 'Apodo', 'Nombre', 'Apellido', 'DNI', 'Celular'],
       ...clientes.map(
         (c) => [
           c.id.toString(),
@@ -36,14 +36,25 @@ class Backup {
     ];
 
     List<List<String>> membresiaCsv = [
-      ['ID', 'ClienteID', 'FechaInicio', 'FechaFin', 'Tipo', 'Costo'],
+      [
+        'ID',
+        'ClienteID',
+        'FechaInicio',
+        'FechaFin',
+        'FechaCancelacion',
+        'Cancelada',
+        'Tipo',
+        'Costo',
+      ],
       ...membresias.map(
         (m) => [
           m.id.toString(),
           m.clienteId.toString(),
           m.fechaInicio.toIso8601String(),
           m.fechaFin.toIso8601String(),
-          m.tipo ?? '',
+          m.fechaCancelacion?.toIso8601String() ?? '',
+          m.cancelada ? 'Sí' : 'No',
+          m.tipo,
           m.costo?.toString() ?? '',
         ],
       ),
