@@ -1,6 +1,8 @@
 import 'dart:io';
+import 'package:ego/widgets/dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:csv/csv.dart';
+import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:ego/models/cliente.dart';
 import 'package:ego/models/membresia.dart';
@@ -11,7 +13,7 @@ class Backup {
   static Future<void> createBackup(BuildContext context) async {
     // Solicitar permisos
     if (!await _requestPermission()) {
-      _mostrarDialogoError(
+      CustomDialogos.mostrarDialogoError(
         context,
         'Permiso denegado',
         'No se pudo guardar el backup porque no se otorgaron permisos de almacenamiento.',
@@ -67,9 +69,12 @@ class Backup {
     if (!await externalDir.exists()) {
       await externalDir.create(recursive: true);
     }
+    String fecha = DateFormat('yyyyMMdd_HHmmss').format(DateTime.now());
+    String nameClienteCsv = 'clientes_$fecha.csv';
+    String nameMembresiaCsv = 'membresias_$fecha.csv';
 
-    File clientesFile = File('${externalDir.path}/clientes.csv');
-    File membresiasFile = File('${externalDir.path}/membresias.csv');
+    File clientesFile = File('${externalDir.path}/$nameClienteCsv');
+    File membresiasFile = File('${externalDir.path}/$nameMembresiaCsv');
 
     await clientesFile.writeAsString(
       const ListToCsvConverter().convert(clienteCsv),
@@ -115,27 +120,5 @@ class Backup {
       return status.isGranted;
     }
     return true; // En iOS u otros, no aplica
-  }
-
-  static void _mostrarDialogoError(
-    BuildContext context,
-    String titulo,
-    String mensaje,
-  ) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text(titulo),
-          content: Text(mensaje),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Cerrar'),
-            ),
-          ],
-        );
-      },
-    );
   }
 }

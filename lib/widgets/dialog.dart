@@ -17,6 +17,28 @@ class CustomDialogos {
     );
   }
 
+  static void mostrarDialogoError(
+    BuildContext context,
+    String titulo,
+    String mensaje,
+  ) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(titulo),
+          content: Text(mensaje),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Cerrar'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   static void mostrarEliminar({
     required BuildContext context,
     required String nombre,
