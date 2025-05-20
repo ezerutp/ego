@@ -93,7 +93,8 @@ class MyHomePageState extends State<MyHomePage> {
   ) {
     CustomDialogos.mostrarEliminar(
       context: context,
-      nombre: nombreCliente,
+      titulo: 'Eliminar cliente',
+      mensaje: '¿Está seguro de eliminar a $nombreCliente?',
       onConfirmar: () async {
         await _clienteRepository.eliminarCliente(clienteId);
         _getData(); // actualiza estado con setState()
@@ -108,7 +109,8 @@ class MyHomePageState extends State<MyHomePage> {
   ) {
     CustomDialogos.mostrarEliminar(
       context: context,
-      nombre: nombreMembresia,
+      titulo: 'Eliminar membresía',
+      mensaje: '¿Estas seguro de eliminar $nombreMembresia?',
       onConfirmar: () async {
         await _membresiaRespository.cancelarMembresia(membresiaId);
         _getData(); // actualiza estado con setState()

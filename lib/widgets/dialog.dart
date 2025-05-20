@@ -41,15 +41,16 @@ class CustomDialogos {
 
   static void mostrarEliminar({
     required BuildContext context,
-    required String nombre,
+    required String titulo,
+    required String mensaje,
     required VoidCallback onConfirmar,
   }) {
     showDialog(
       context: context,
       builder:
           (_) => AlertDialog(
-            title: const Text('Confirmar eliminación'),
-            content: Text('¿Deseas eliminar a $nombre?'),
+            title: Text(titulo),
+            content: Text(mensaje),
             actions: [
               TextButton(
                 child: const Text('Cancelar'),
