@@ -19,7 +19,6 @@ class CardCliente extends StatelessWidget {
   });
 
   String get nombreCompleto => '${cliente.nombres} ${cliente.apellidos}';
-
   String get status => tieneMembresia ? 'Activo' : 'Sin membresía';
 
   /// Método para construir la página de inicio (las cards de los clientes)
@@ -29,10 +28,42 @@ class CardCliente extends StatelessWidget {
       color: AppColors.darkGray,
       margin: const EdgeInsets.symmetric(vertical: 8),
       child: ListTile(
-        title: Text(
-          nombreCompleto,
-          style: const TextStyle(color: Colors.white),
+        title: Text.rich(
+          TextSpan(
+            children: [
+              if (cliente.apodo?.trim().isNotEmpty == true)
+                TextSpan(
+                  text: '[${cliente.apodo!.toUpperCase()}] ',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.cyanAccent,
+                    fontSize: 16,
+                    shadows: [
+                      Shadow(
+                        blurRadius: 10.0,
+                        color: Colors.cyanAccent.withOpacity(0.8),
+                        offset: Offset(0, 0),
+                      ),
+                      Shadow(
+                        blurRadius: 20.0,
+                        color: Colors.cyanAccent.withOpacity(0.6),
+                        offset: Offset(0, 0),
+                      ),
+                    ],
+                  ),
+                ),
+              TextSpan(
+                text: nombreCompleto,
+                style: const TextStyle(
+                  fontWeight: FontWeight.normal,
+                  color: Colors.white,
+                  fontSize: 16,
+                ),
+              ),
+            ],
+          ),
         ),
+
         subtitle: Text(
           status,
           style: TextStyle(

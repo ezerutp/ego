@@ -17,6 +17,9 @@ class AddClienteDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final TextEditingController apodoController = TextEditingController(
+      text: cliente?.apodo ?? '',
+    );
     final TextEditingController nombreController = TextEditingController(
       text: cliente?.nombres ?? '',
     );
@@ -36,6 +39,10 @@ class AddClienteDialog extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            TextField(
+              controller: apodoController,
+              decoration: const InputDecoration(labelText: 'Apodo'),
+            ),
             TextField(
               controller: nombreController,
               decoration: const InputDecoration(labelText: 'Nombre'),
@@ -66,6 +73,7 @@ class AddClienteDialog extends StatelessWidget {
         ),
         TextButton(
           onPressed: () async {
+            final String apodo = apodoController.text.trim();
             final String nombre = nombreController.text.trim();
             final String apellido = apellidoController.text.trim();
             final String dni = dniController.text.trim();
@@ -78,6 +86,7 @@ class AddClienteDialog extends StatelessWidget {
               if (cliente == null) {
                 // REGISTRAR
                 final nuevoCliente = Cliente(
+                  apodo: apodo,
                   nombres: nombre,
                   apellidos: apellido,
                   dni: dni,
@@ -88,6 +97,7 @@ class AddClienteDialog extends StatelessWidget {
               } else {
                 // EDITAR
                 final clienteActualizado = cliente!.copyWith(
+                  apodo: apodo,
                   nombres: nombre,
                   apellidos: apellido,
                   dni: dni,
