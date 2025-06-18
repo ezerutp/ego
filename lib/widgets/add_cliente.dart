@@ -6,22 +6,32 @@ import 'package:ego/repository/cliente_repository.dart';
 class AddClienteDialog extends StatelessWidget {
   final ClienteRepository clienteRepository;
   final Function onClienteAdded;
+  final Cliente? cliente;
 
   const AddClienteDialog({
     Key? key,
     required this.clienteRepository,
     required this.onClienteAdded,
+    this.cliente,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final TextEditingController nombreController = TextEditingController();
-    final TextEditingController apellidoController = TextEditingController();
-    final TextEditingController dniController = TextEditingController();
-    final TextEditingController celularController = TextEditingController();
+    final TextEditingController nombreController = TextEditingController(
+      text: cliente?.nombres ?? '',
+    );
+    final TextEditingController apellidoController = TextEditingController(
+      text: cliente?.apellidos ?? '',
+    );
+    final TextEditingController dniController = TextEditingController(
+      text: cliente?.dni ?? '',
+    );
+    final TextEditingController celularController = TextEditingController(
+      text: cliente?.celular ?? '',
+    );
 
     return AlertDialog(
-      title: const Text('Añadir Cliente'),
+      title: Text(cliente == null ? 'Registrar Cliente' : 'Editar Cliente'),
       content: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -65,14 +75,26 @@ class AddClienteDialog extends StatelessWidget {
                 apellido.isNotEmpty &&
                 dni.isNotEmpty &&
                 celular.isNotEmpty) {
-              Cliente nuevoCliente = Cliente(
-                nombres: nombre,
-                apellidos: apellido,
-                dni: dni,
-                celular: celular,
-                estado: true,
-              );
-              await clienteRepository.insertCliente(nuevoCliente);
+              if (cliente == null) {
+                // REGISTRAR
+                final nuevoCliente = Cliente(
+                  nombres: nombre,
+                  apellidos: apellido,
+                  dni: dni,
+                  celular: celular,
+                  estado: true,
+                );
+                await clienteRepository.insertCliente(nuevoCliente);
+              } else {
+                // EDITAR
+                final clienteActualizado = cliente!.copyWith(
+                  nombres: nombre,
+                  apellidos: apellido,
+                  dni: dni,
+                  celular: celular,
+                );
+                await clienteRepository.updateCliente(clienteActualizado);
+              }
               onClienteAdded();
               Navigator.of(context).pop();
             } else {

@@ -86,6 +86,20 @@ class MyHomePageState extends State<MyHomePage> {
     CustomDialogos.mostrarInfoCliente(context: context, cliente: cliente);
   }
 
+  void _onEditarClientePressed(BuildContext context, int clienteId) {
+    final cliente = _clientes.firstWhere((c) => c.id == clienteId);
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AddClienteDialog(
+          clienteRepository: _clienteRepository,
+          cliente: cliente,
+          onClienteAdded: _getData,
+        );
+      },
+    );
+  }
+
   void _confirmarYEliminarCliente(
     BuildContext context,
     int clienteId,
@@ -191,6 +205,7 @@ class MyHomePageState extends State<MyHomePage> {
         _onAddClientePressed,
         _membresiasPorCliente,
         _onClienteInfoPressed,
+        _onEditarClientePressed,
         _confirmarYEliminarCliente,
       ),
 

@@ -13,6 +13,7 @@ class HomePageContent {
     Function onAddClientePressed,
     Map<int, Membresia?> membresiasPorCliente,
     Function(BuildContext context, int clienteId) onInformacionCliente,
+    Function(BuildContext context, int clienteId) onEditarCliente,
     Function(BuildContext context, int id, String nombre) onEliminarCliente,
   ) {
     return Padding(
@@ -78,6 +79,7 @@ class HomePageContent {
                       cliente: cliente,
                       tieneMembresia: tieneMembresia,
                       onInfo: () => onInformacionCliente(context, cliente.id!),
+                      onEdit: () => onEditarCliente(context, cliente.id!),
                       onDelete:
                           () => onEliminarCliente(
                             context,

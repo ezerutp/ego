@@ -48,11 +48,7 @@ class CardCliente extends StatelessWidget {
             ),
             IconButton(
               icon: const Icon(Icons.edit, color: Colors.blue),
-              onPressed:
-                  onEdit ??
-                  () {
-                    print('Editar $nombreCompleto');
-                  },
+              onPressed: onEdit ?? () {},
             ),
             IconButton(
               icon: const Icon(Icons.delete, color: Colors.red),

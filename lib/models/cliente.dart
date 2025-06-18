@@ -33,6 +33,26 @@ class Cliente {
   set setCelular(String? value) => celular = value;
   set setEstado(bool? value) => estado = value;
 
+  Cliente copyWith({
+    int? id,
+    String? apodo,
+    String? nombres,
+    String? apellidos,
+    String? dni,
+    String? celular,
+    bool? estado,
+  }) {
+    return Cliente(
+      id: id ?? this.id,
+      apodo: apodo ?? this.apodo,
+      nombres: nombres ?? this.nombres,
+      apellidos: apellidos ?? this.apellidos,
+      dni: dni ?? this.dni,
+      celular: celular ?? this.celular,
+      estado: estado ?? this.estado,
+    );
+  }
+
   Map<String, dynamic> toMap() {
     return {
       'id': id,
