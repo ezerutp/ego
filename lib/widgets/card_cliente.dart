@@ -19,7 +19,7 @@ class CardCliente extends StatelessWidget {
   });
 
   String get nombreCompleto => '${cliente.nombres} ${cliente.apellidos}';
-  String get status => tieneMembresia ? 'Activo' : 'Sin membresía';
+  String get status => tieneMembresia ? 'ACTIVO' : 'SIN MEMBRESÍA';
 
   /// Método para construir la página de inicio (las cards de los clientes)
   @override
@@ -33,20 +33,20 @@ class CardCliente extends StatelessWidget {
             children: [
               if (cliente.apodo?.trim().isNotEmpty == true)
                 TextSpan(
-                  text: '[${cliente.apodo!.toUpperCase()}] ',
+                  text: '${cliente.apodo!.toUpperCase()} • ',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Colors.cyanAccent,
-                    fontSize: 16,
+                    fontSize: 13.5,
                     shadows: [
                       Shadow(
                         blurRadius: 10.0,
-                        color: Colors.cyanAccent.withOpacity(0.8),
+                        color: Colors.cyanAccent.withValues(alpha: 0.8),
                         offset: Offset(0, 0),
                       ),
                       Shadow(
                         blurRadius: 20.0,
-                        color: Colors.cyanAccent.withOpacity(0.6),
+                        color: Colors.cyanAccent.withValues(alpha: 0.6),
                         offset: Offset(0, 0),
                       ),
                     ],
@@ -67,22 +67,23 @@ class CardCliente extends StatelessWidget {
         subtitle: Text(
           status,
           style: TextStyle(
-            color: status == 'Activo' ? AppColors.green : AppColors.red,
+            color: status == 'ACTIVO' ? AppColors.green : AppColors.red,
+            fontWeight: FontWeight.bold,
           ),
         ),
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
             IconButton(
-              icon: const Icon(Icons.info, color: AppColors.gold),
+              icon: const Icon(Icons.info, color: Colors.green),
               onPressed: onInfo ?? () {},
             ),
             IconButton(
-              icon: const Icon(Icons.edit, color: Colors.blue),
+              icon: const Icon(Icons.edit, color: Colors.yellow),
               onPressed: onEdit ?? () {},
             ),
             IconButton(
-              icon: const Icon(Icons.delete, color: Colors.red),
+              icon: const Icon(Icons.delete_forever, color: Colors.red),
               onPressed: onDelete ?? () {},
             ),
           ],

@@ -3,19 +3,19 @@ import 'package:ego/main.dart';
 import 'package:ego/models/cliente.dart';
 import 'package:ego/models/cliente_stats.dart';
 import 'package:ego/models/membresia_stats.dart';
-import 'package:ego/utils/backup.dart';
 import 'package:ego/utils/utils.dart';
+import 'package:ego/views/backup.dart';
 import 'package:ego/widgets/add_cliente.dart';
 import 'package:ego/widgets/add_membership.dart';
 import 'package:ego/widgets/button_navigation.dart';
 import 'package:ego/widgets/dialog.dart';
-import 'package:ego/widgets/membership_page_content.dart';
+import 'package:ego/views/membership_page_content.dart';
 import 'package:ego/models/membresia.dart';
 import 'package:ego/repository/cliente_repository.dart';
 import 'package:ego/repository/membresia_respository.dart';
 import 'package:ego/theme/color.dart';
 import 'package:flutter/material.dart';
-import 'package:ego/widgets/home_page_content.dart';
+import 'package:ego/views/home_page_content.dart';
 
 class MyHomePageState extends State<MyHomePage> {
   // Inicializa el repositorio de clientes
@@ -221,24 +221,7 @@ class MyHomePageState extends State<MyHomePage> {
       ),
 
       // Vista Backup
-      Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text(
-              'Backup',
-              style: TextStyle(color: Colors.white, fontSize: 24),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                Backup.createBackup(context);
-              },
-              child: const Text('Crear Backup'),
-            ),
-          ],
-        ),
-      ),
+      BackupPage.viewBackup(context),
 
       // Vista Notificaciones
       const Center(
