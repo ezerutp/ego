@@ -5,7 +5,7 @@ class Cliente {
   String apellidos;
   String? dni;
   String? celular;
-  bool? estado = true;
+  bool estado = true;
 
   Cliente({
     this.id,
@@ -14,7 +14,7 @@ class Cliente {
     required this.apellidos,
     this.dni,
     this.celular,
-    this.estado,
+    required this.estado,
   });
 
   int? get getId => id;
@@ -23,7 +23,7 @@ class Cliente {
   String get getApellidos => apellidos;
   String? get getDni => dni;
   String? get getCelular => celular;
-  bool? get getEstado => estado;
+  bool get getEstado => estado;
 
   set setId(int? value) => id = value;
   set setApodo(String? value) => apodo = value;
@@ -31,7 +31,7 @@ class Cliente {
   set setApellidos(String value) => apellidos = value;
   set setDni(String? value) => dni = value;
   set setCelular(String? value) => celular = value;
-  set setEstado(bool? value) => estado = value;
+  set setEstado(bool value) => estado = value;
 
   Cliente copyWith({
     int? id,

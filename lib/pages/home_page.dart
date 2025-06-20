@@ -248,7 +248,7 @@ class MyHomePageState extends State<MyHomePage> {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset('lib/assets/image/logo.png', height: 30),
+            Image.asset('lib/assets/image/logo-new.png', height: 30),
             const SizedBox(width: 10),
           ],
         ),
