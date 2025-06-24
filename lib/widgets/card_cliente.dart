@@ -69,6 +69,7 @@ class CardCliente extends StatelessWidget {
           style: TextStyle(
             color: status == 'ACTIVO' ? AppColors.green : AppColors.red,
             fontWeight: FontWeight.bold,
+            fontSize: 12,
           ),
         ),
         trailing: Row(

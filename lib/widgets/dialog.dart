@@ -81,10 +81,16 @@ class CustomDialogos {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                if (cliente.getApodo != null &&
+                    cliente.getApodo!.isNotEmpty) ...[
+                  Text('Apodo: ${cliente.getApodo}'),
+                  const SizedBox(height: 8),
+                ],
                 Text('Nombre: ${cliente.getNombres} ${cliente.getApellidos}'),
                 const SizedBox(height: 8),
                 Text('DNI: ${cliente.getDni ?? 'No disponible'}'),
-                Text('Celular: ${cliente.getCelular ?? 'No disponible'}'),
+                const SizedBox(height: 8),
+                Text('Teléfono: ${cliente.getCelular ?? 'No disponible'}'),
               ],
             ),
             actions: [

@@ -3,12 +3,12 @@ import 'package:ego/main.dart';
 import 'package:ego/models/cliente.dart';
 import 'package:ego/models/cliente_stats.dart';
 import 'package:ego/models/membresia_stats.dart';
-import 'package:ego/utils/utils.dart';
+import 'package:ego/services/dialogo_servicio.dart';
 import 'package:ego/views/backup.dart';
+import 'package:ego/views/membership_page_history.dart';
 import 'package:ego/widgets/add_cliente.dart';
 import 'package:ego/widgets/add_membership.dart';
 import 'package:ego/widgets/button_navigation.dart';
-import 'package:ego/widgets/dialog.dart';
 import 'package:ego/views/membership_page_content.dart';
 import 'package:ego/models/membresia.dart';
 import 'package:ego/repository/cliente_repository.dart';
@@ -27,6 +27,7 @@ class MyHomePageState extends State<MyHomePage> {
 
   // mapas para datos cacheados
   final Map<int, Membresia?> _membresiasPorCliente = {};
+  final Map<int, Cliente?> _clientesPorMembresiaInactivas = {};
   final Map<int, Cliente?> _clientesPorMembresia = {};
 
   ClienteStats _stats = ClienteStats(
@@ -47,35 +48,40 @@ class MyHomePageState extends State<MyHomePage> {
   // Listas para almacenar los datos de clientes y membresías
   List<Cliente> _clientes = [];
   List<Membresia> _membresias = [];
+  List<Membresia> _membresiasInactivas = [];
 
   @override
   void initState() {
     super.initState();
     _homeController = HomeController(_clienteRepository, _membresiaRespository);
-    _getData();
+    _cargarDatosIniciales();
   }
 
   // metodo para el boton
-  void _onItemTapped(int index) {
+  void _cambiarPestana(int index) {
     setState(() {
       _selectedIndex = index;
     });
   }
 
   // metodo para cargar los datos de clientes, membresias y estadisticas
-  void _getData() async {
+  void _cargarDatosIniciales() async {
     final List<Cliente> clientes = await _homeController.cargarClientes(
       _membresiasPorCliente,
     );
     final List<Membresia> membresias = await _homeController.cargarMembresias(
       _clientesPorMembresia,
     );
+    final List<Membresia> membresiasInactivas = await _homeController
+        .cargarMembresiasInactivas(_clientesPorMembresiaInactivas);
+
     final ClienteStats stats = await _homeController.getStatsClientes();
     final MembresiaStats membresiaStats =
         await _homeController.getStatsMembresias();
     setState(() {
       _clientes = clientes;
       _membresias = membresias;
+      _membresiasInactivas = membresiasInactivas;
       _stats = stats;
       _membresiaStats = membresiaStats;
     });
@@ -83,163 +89,141 @@ class MyHomePageState extends State<MyHomePage> {
 
   void _onClienteInfoPressed(BuildContext context, int clienteId) {
     final cliente = _clientes.firstWhere((c) => c.id == clienteId);
-    CustomDialogos.mostrarInfoCliente(context: context, cliente: cliente);
+    DialogService.mostrarInfoCliente(context, cliente);
   }
 
   void _onEditarClientePressed(BuildContext context, int clienteId) {
     final cliente = _clientes.firstWhere((c) => c.id == clienteId);
-    showDialog(
+    DialogService.editarCliente(
       context: context,
-      builder: (BuildContext context) {
-        return AddClienteDialog(
-          clienteRepository: _clienteRepository,
-          cliente: cliente,
-          onClienteAdded: _getData,
-        );
-      },
+      cliente: cliente,
+      clienteRepository: _clienteRepository,
+      onClienteAdded: _cargarDatosIniciales,
     );
   }
 
-  void _confirmarYEliminarCliente(
+  void _mostrarDialogoEliminarCliente(
     BuildContext context,
     int clienteId,
     String nombreCliente,
   ) {
-    CustomDialogos.mostrarEliminar(
+    DialogService.confirmarEliminarCliente(
       context: context,
-      titulo: 'Eliminar cliente',
-      mensaje: '¿Está seguro de eliminar a $nombreCliente?',
-      onConfirmar: () async {
-        await _clienteRepository.eliminarCliente(clienteId);
-        _getData(); // actualiza estado con setState()
-      },
+      clienteId: clienteId,
+      nombreCliente: nombreCliente,
+      clienteRepository: _clienteRepository,
+      onDeleted: _cargarDatosIniciales,
     );
   }
 
-  void _confirmarEliminarMembresia(
+  void _mostrarDialogoEliminarMembresia(
     BuildContext context,
     int membresiaId,
     String nombreMembresia,
   ) {
-    CustomDialogos.mostrarEliminar(
+    DialogService.confirmarEliminarMembresia(
       context: context,
-      titulo: 'Eliminar membresía',
-      mensaje: '¿Estas seguro de eliminar $nombreMembresia?',
-      onConfirmar: () async {
-        await _membresiaRespository.cancelarMembresia(membresiaId);
-        _getData(); // actualiza estado con setState()
-      },
+      membresiaId: membresiaId,
+      nombreMembresia: nombreMembresia,
+      membresiaRespository: _membresiaRespository,
+      onDeleted: _cargarDatosIniciales,
     );
   }
 
   // CORREGIR ESTO PIPIPI
-  Future<void> _confirmarActualizarMembresia(
+  Future<void> _mostrarDialogoActualizarMembresia(
     BuildContext context,
     int membresiaId,
     String nombreMembresia,
   ) async {
-    final membresia = await _membresiaRespository.getMembresiaById(membresiaId);
-
-    if (membresia == null) {
-      CustomDialogos.mostrarMensaje(
-        context: context,
-        mensaje: 'No se encontró la membresía',
-      );
-      return;
-    }
-    CustomDialogos.mostrarAumentarMembresia(
+    await DialogService.confirmarActualizarMembresia(
       context: context,
-      nombreCliente: nombreMembresia,
-      fechaInicio: membresia.fechaInicio,
-      fechaFin: membresia.fechaFin,
-      onConfirmar: (int meses) async {
-        membresia.fechaFin = Utils.sumarMeses(membresia.fechaFin, meses);
-
-        await _membresiaRespository.updateMembresia(membresia);
-
-        CustomDialogos.mostrarMensaje(
-          context: context,
-          mensaje: 'Membresía extendida $meses mes${meses > 1 ? "es" : ""}.',
-          backgroundColor: Colors.green,
-        );
-
-        _getData();
-      },
+      membresiaId: membresiaId,
+      nombreMembresia: nombreMembresia,
+      membresiaRespository: _membresiaRespository,
+      onUpdated: _cargarDatosIniciales,
     );
   }
 
-  void _onAddClientePressed() {
+  void _mostrarDialogoAgregarCliente() {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AddClienteDialog(
           clienteRepository: _clienteRepository,
-          onClienteAdded: _getData,
+          onClienteAdded: _cargarDatosIniciales,
         );
       },
     );
   }
 
-  void _onAddMembershipPressed() {
+  void _mostrarDialogoAgregarMembresia() {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AddMembership(
           membresiaRespository: _membresiaRespository,
           clienteRepository: _clienteRepository,
-          onMembershipAdded: _getData,
+          onMembershipAdded: _cargarDatosIniciales,
         );
       },
     );
   }
 
+  List<Widget> _buildPages(BuildContext context) => [
+    // Vista Home
+    HomePageContent.buildHomePage(
+      context,
+      _clientes,
+      _stats,
+      _mostrarDialogoAgregarCliente,
+      _membresiasPorCliente,
+      _onClienteInfoPressed,
+      _onEditarClientePressed,
+      _mostrarDialogoEliminarCliente,
+    ),
+
+    // Vista Membresías
+    MemberPageContent.buildHomePage(
+      context,
+      _membresias,
+      _membresiaStats,
+      _mostrarDialogoAgregarMembresia,
+      _clientesPorMembresia,
+      _mostrarDialogoActualizarMembresia,
+      _mostrarDialogoEliminarMembresia,
+    ),
+
+    // Vista Membresías Inactivas
+    MemberPageHistory.buildHomePage(
+      context,
+      _membresiasInactivas,
+      _membresiaStats,
+      _clientesPorMembresiaInactivas,
+    ),
+
+    // Vista Backup
+    BackupPage.viewBackup(context),
+
+    // Vista Notificaciones
+    const Center(
+      child: Text(
+        'Notificaciones',
+        style: TextStyle(color: Colors.white, fontSize: 24),
+      ),
+    ),
+
+    // Vista Configuración
+    const Center(
+      child: Text(
+        'Configuración',
+        style: TextStyle(color: Colors.white, fontSize: 24),
+      ),
+    ),
+  ];
+
   @override
   Widget build(BuildContext context) {
-    // Lista de vistas por pestaña
-    final List<Widget> pages = [
-      // Vista Home
-      HomePageContent.buildHomePage(
-        context,
-        _clientes,
-        _stats,
-        _onAddClientePressed,
-        _membresiasPorCliente,
-        _onClienteInfoPressed,
-        _onEditarClientePressed,
-        _confirmarYEliminarCliente,
-      ),
-
-      // Vista Membresías
-      MemberPageContent.buildHomePage(
-        context,
-        _membresias,
-        _membresiaStats,
-        _onAddMembershipPressed,
-        _clientesPorMembresia,
-        _confirmarActualizarMembresia,
-        _confirmarEliminarMembresia,
-      ),
-
-      // Vista Backup
-      BackupPage.viewBackup(context),
-
-      // Vista Notificaciones
-      const Center(
-        child: Text(
-          'Notificaciones',
-          style: TextStyle(color: Colors.white, fontSize: 24),
-        ),
-      ),
-
-      // Vista Configuración
-      const Center(
-        child: Text(
-          'Configuración',
-          style: TextStyle(color: Colors.white, fontSize: 24),
-        ),
-      ),
-    ];
-
     return Scaffold(
       backgroundColor: AppColors.darkBlack,
       appBar: AppBar(
@@ -254,10 +238,10 @@ class MyHomePageState extends State<MyHomePage> {
         ),
       ),
 
-      body: pages[_selectedIndex], //
+      body: _buildPages(context)[_selectedIndex],
       bottomNavigationBar: CustomBottomNavigationBar(
         currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
+        onTap: _cambiarPestana,
       ),
     );
   }

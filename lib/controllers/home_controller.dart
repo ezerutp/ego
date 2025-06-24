@@ -32,6 +32,19 @@ class HomeController {
     return membresias;
   }
 
+  Future<List<Membresia>> cargarMembresiasInactivas(
+    Map<int, Cliente?> cache,
+  ) async {
+    List<Membresia> membresiasInactivas =
+        await membresiaRepo.getMembresiasInactivas();
+    for (var membresia in membresiasInactivas) {
+      cache[membresia.clienteId] = await clienteRepo.getClienteById(
+        membresia.clienteId,
+      );
+    }
+    return membresiasInactivas;
+  }
+
   Future<ClienteStats> getStatsClientes() => StatsData.getStatsClientes();
   Future<MembresiaStats> getStatsMembresias() => StatsData.getStatsMembresias();
 }
