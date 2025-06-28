@@ -1,5 +1,20 @@
+## Estado del proyecto
+
+Esta es la primera versión funcional del sistema. Aunque cumple con los objetivos básicos, se ha identificado que la estructura interna y la organización del código pueden ser optimizadas.
+
+### Próximos pasos
+
+Se desarrollará una **versión 2.0** con mejoras en:
+- Separación de responsabilidades
+- Refactorización del código
+- Uso de patrones de diseño
+- Mejora en la experiencia de usuario
+
+¡Gracias por revisar este proyecto! 🙌
+
 
 # ego - Sistema de Gestión de Clientes y Membresías
+![version](https://img.shields.io/badge/version-1.0.0-blue.svg)
 
 **ego** es una aplicación móvil desarrollada en Flutter con SQLite para la gestión eficiente de clientes y membresías de un gimnasio u organización similar. Ofrece una interfaz moderna, seguimiento de membresías activas y estadísticas clave para la toma de decisiones.
 
