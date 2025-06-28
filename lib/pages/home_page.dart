@@ -63,6 +63,7 @@ class MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
     _homeController = HomeController(_clienteRepository, _membresiaRespository);
+
     _clienteSearchController.addListener(() {
       setState(() {
         _filtroClientes = _clienteSearchController.text.toLowerCase();
