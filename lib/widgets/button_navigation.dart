@@ -14,6 +14,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
+      type: BottomNavigationBarType.fixed,
       backgroundColor: AppColors.darkGray,
       selectedItemColor: AppColors.orange,
       unselectedItemColor: Colors.white,
@@ -27,6 +28,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
           icon: Icon(Icons.card_membership),
           label: 'Membresías',
         ),
+        BottomNavigationBarItem(icon: Icon(Icons.history), label: 'Historial'),
         BottomNavigationBarItem(icon: Icon(Icons.backup), label: 'Backup'),
         /*
         BottomNavigationBarItem(

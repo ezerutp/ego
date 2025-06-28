@@ -1,19 +1,16 @@
 import 'package:ego/models/membresia_stats.dart';
-import 'package:ego/widgets/card_membership.dart';
+import 'package:ego/widgets/card_membership_history.dart';
 import 'package:flutter/material.dart';
 import '../models/cliente.dart';
 import '../models/membresia.dart';
 import '../theme/color.dart';
 
-class MemberPageContent {
+class MemberPageHistory {
   static Widget buildHomePage(
     BuildContext context,
     List<Membresia> membresias,
     MembresiaStats stats,
-    Function onAddMembershipPressed,
     Map<int, Cliente?> clientePorMembresia,
-    Function(BuildContext context, int id, String nombre) actualizarMembresia,
-    Function(BuildContext context, int id, String nombre) eliminarMembresia,
     TextEditingController searchController,
     String filtro,
   ) {
@@ -38,18 +35,6 @@ class MemberPageContent {
                 style: TextStyle(color: Colors.white),
               ),
             ],
-          ),
-          const SizedBox(height: 16),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.orange,
-              padding: const EdgeInsets.symmetric(vertical: 16),
-            ),
-            onPressed: () => onAddMembershipPressed(),
-            child: const Text(
-              '+ Añadir membresía',
-              style: TextStyle(fontSize: 16, color: AppColors.white),
-            ),
           ),
           const SizedBox(height: 16),
           TextField(
@@ -86,21 +71,9 @@ class MemberPageContent {
                       })
                       .map((membresia) {
                         var cliente = clientePorMembresia[membresia.clienteId];
-                        return CardMembership(
+                        return CardMembershipHistory(
                           cliente: cliente!,
                           membership: membresia,
-                          onUpdate:
-                              () => actualizarMembresia(
-                                context,
-                                membresia.id!,
-                                '${cliente.nombres} ${cliente.apellidos}',
-                              ),
-                          onDelete:
-                              () => eliminarMembresia(
-                                context,
-                                membresia.id!,
-                                '${cliente.nombres} ${cliente.apellidos}',
-                              ),
                         );
                       })
                       .toList(),

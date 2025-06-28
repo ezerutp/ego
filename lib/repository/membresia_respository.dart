@@ -90,6 +90,16 @@ class MembresiaRespository {
     return result.map((map) => Membresia.fromMap(map)).toList();
   }
 
+  Future<List<Membresia>> getMembresiasInactivas() async {
+    final db = await _databaseService.database;
+    final result = await db.query(
+      'membresias',
+      where: 'date(fechaFin) < date("now") OR cancelada = 1',
+      orderBy: 'fechaFin DESC',
+    );
+    return result.map((map) => Membresia.fromMap(map)).toList();
+  }
+
   Future<List<Membresia>> getMembresiasActivasByTipo(MembresiaTipo tipo) async {
     final db = await _databaseService.database;
     final result = await db.query(

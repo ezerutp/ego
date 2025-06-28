@@ -15,6 +15,8 @@ class HomePageContent {
     Function(BuildContext context, int clienteId) onInformacionCliente,
     Function(BuildContext context, int clienteId) onEditarCliente,
     Function(BuildContext context, int id, String nombre) onEliminarCliente,
+    TextEditingController searchController,
+    String filtro,
   ) {
     return Padding(
       padding: const EdgeInsets.all(16),
@@ -52,6 +54,7 @@ class HomePageContent {
           ),
           const SizedBox(height: 16),
           TextField(
+            controller: searchController,
             style: const TextStyle(color: AppColors.white),
             decoration: InputDecoration(
               hintText: 'Buscar miembro',
@@ -72,22 +75,30 @@ class HomePageContent {
           Expanded(
             child: ListView(
               children:
-                  clientes.map((cliente) {
-                    final tieneMembresia =
-                        membresiasPorCliente[cliente.id] != null;
-                    return CardCliente(
-                      cliente: cliente,
-                      tieneMembresia: tieneMembresia,
-                      onInfo: () => onInformacionCliente(context, cliente.id!),
-                      onEdit: () => onEditarCliente(context, cliente.id!),
-                      onDelete:
-                          () => onEliminarCliente(
-                            context,
-                            cliente.id!,
-                            '${cliente.nombres} ${cliente.apellidos}',
-                          ),
-                    );
-                  }).toList(),
+                  clientes
+                      .where(
+                        (cliente) =>
+                            cliente.nombres.toLowerCase().contains(filtro) ||
+                            cliente.apellidos.toLowerCase().contains(filtro),
+                      )
+                      .map((cliente) {
+                        final tieneMembresia =
+                            membresiasPorCliente[cliente.id] != null;
+                        return CardCliente(
+                          cliente: cliente,
+                          tieneMembresia: tieneMembresia,
+                          onInfo:
+                              () => onInformacionCliente(context, cliente.id!),
+                          onEdit: () => onEditarCliente(context, cliente.id!),
+                          onDelete:
+                              () => onEliminarCliente(
+                                context,
+                                cliente.id!,
+                                '${cliente.nombres} ${cliente.apellidos}',
+                              ),
+                        );
+                      })
+                      .toList(),
             ),
           ),
         ],
